@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import CanvasConext from './CanvasContext';
 import { CHARACTER_IMAGE_SIZE, CHARACTER_CLASSES_MAP } from './characterConstants';
-import { TILE_SIZE } from './mapConstants';
+import { TILE_SIZE, MAP_DIMENSIONS } from './mapConstants';
 import { loadCharacter } from './slices/statusSlice';
 import { MY_CHARACTER_INIT_CONFIG } from './characterConstants';
 import { update as updateAllCharactersData } from './slices/allCharactersSlice'
@@ -40,24 +40,31 @@ function MyCharacter({ myCharactersData, loadCharacter, updateAllCharactersData,
                 case 65: // A key
                 case 37: // Left arrow key
                     newX -= 1;
+                    event.preventDefault();
                     break;
                 case 87: // W key
                 case 38: // Up arrow key
                     newY -= 1;
+                    event.preventDefault();
                     break;
                 case 68: // D key
                 case 39: // Right arrow key
                     newX += 1;
+                    event.preventDefault();
                     break;
                 case 83: // S key
                 case 40: // Down arrow key
                     newY += 1;
+                    event.preventDefault();
                     break;
                 default:
                     break;
             }
+            console.log(`new position x: ${newX}, y: ${newY}`)
 
-            event.preventDefault();
+
+            // limit the character's position to the map's boundaries 
+            if (newX < 0 || newX >= MAP_DIMENSIONS.COLS || newY < 0 || newY >= MAP_DIMENSIONS.ROWS) return
 
             updateAllCharactersData({
                 [MY_CHARACTER_INIT_CONFIG.id]: {
